@@ -25,6 +25,6 @@ func (s *CatService) UpdateCat(cat *models.Cat) error {
 	return s.Repo.UpdateCat(cat)
 }
 
-func (s *CatService) DeleteCat(id uint) error {
-	return s.Repo.DeleteCat(id)
+func (s *CatService) DeleteCat(cat *models.Cat) error {
+	return s.Repo.DeleteCat(cat)
 }

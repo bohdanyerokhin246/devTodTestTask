@@ -67,6 +67,29 @@ info:
   contact: {}
 paths:
   /cats:
+    delete:
+      description: Delete a cat from the database by its ID
+      parameters:
+      - description: Deleted cat data
+        in: body
+        name: cat
+        required: true
+        schema:
+          $ref: '#/definitions/models.Cat'
+      responses:
+        "200":
+          description: Successfully deleted cat
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete a cat
     get:
       description: Get a list of all cats in the database
       responses:
@@ -128,28 +151,6 @@ paths:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Update a cat
   /cats/{id}:
-    delete:
-      description: Delete a cat from the database by its ID
-      parameters:
-      - description: Cat ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: Successfully deleted cat
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "400":
-          description: Invalid ID format
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Delete a cat
     get:
       description: Get a specific cat by its ID
       parameters:
@@ -214,6 +215,29 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Create a new mission
+    put:
+      description: Update the status of an existing mission.
+      parameters:
+      - description: Updated mission data
+        in: body
+        name: mission
+        required: true
+        schema:
+          $ref: '#/definitions/models.Mission'
+      responses:
+        "200":
+          description: Successfully updated mission status
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update mission status
   /missions/{id}:
     delete:
       description: Delete a mission by its ID
@@ -264,7 +288,7 @@ paths:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Get mission by ID
   /missions/{mission_id}/cats/{cat_id}:
-    post:
+    put:
       description: Assign a cat to a specific mission
       parameters:
       - description: Mission ID
@@ -320,30 +344,6 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Add a target to a mission
-  /missions/status:
-    put:
-      description: Update the status of an existing mission
-      parameters:
-      - description: Updated mission data
-        in: body
-        name: mission
-        required: true
-        schema:
-          $ref: '#/definitions/models.Mission'
-      responses:
-        "200":
-          description: Successfully updated mission status
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "400":
-          description: Invalid input
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update mission status
   /targets/{id}:
     delete:
       description: Delete a target by its ID
@@ -367,38 +367,10 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Delete a target
-  /targets/{id}/status:
-    put:
-      description: Update the status of a specific target
-      parameters:
-      - description: Target ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: Target status updated successfully
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "400":
-          description: Invalid ID format
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update target status
-  /targets/{target_id}/notes:
+  /targets/notes:
     put:
       description: Update notes for a specific target
       parameters:
-      - description: Target ID
-        in: path
-        name: target_id
-        required: true
-        type: integer
       - description: Target notes data
         in: body
         name: target
@@ -419,4 +391,28 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Update target notes
+  /targets/status:
+    put:
+      description: Update the status of a specific target
+      parameters:
+      - description: Target status data
+        in: body
+        name: target
+        required: true
+        schema:
+          $ref: '#/definitions/models.Target'
+      responses:
+        "200":
+          description: Target status updated successfully
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update target status
 swagger: "2.0"

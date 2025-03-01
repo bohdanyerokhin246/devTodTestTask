@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 const TheCatAPIURL = "https://api.thecatapi.com/v1/breeds/search?name="
@@ -14,7 +15,7 @@ type Breed struct {
 }
 
 func ValidateBreed(breed string) error {
-	res, err := http.Get(TheCatAPIURL + breed)
+	res, err := http.Get(TheCatAPIURL + url.QueryEscape(breed))
 	if err != nil {
 		return fmt.Errorf("failed to fetch breed data: %v", err)
 	}

@@ -32,21 +32,25 @@ func (repo *CatRepository) ListCats() ([]models.Cat, error) {
 	if err != nil {
 		return nil, fmt.Errorf("could not list cats: %v", err)
 	}
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-
-		}
-	}(rows)
+	defer rows.Close()
 
 	for rows.Next() {
 		var cat models.Cat
-		err = rows.Scan(&cat.ID, &cat.Name, &cat.Experience, &cat.Breed, &cat.Salary, &cat.CreatedAt, &cat.UpdatedAt)
+		var updatedAt sql.NullTime
+		err = rows.Scan(&cat.ID, &cat.Name, &cat.Experience, &cat.Breed, &cat.Salary, &cat.CreatedAt, &updatedAt)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("could not scan row: %v", err)
 		}
+
+		if updatedAt.Valid {
+			cat.UpdatedAt = updatedAt.Time
+		} else {
+			cat.UpdatedAt = time.Time{}
+		}
+
 		cats = append(cats, cat)
 	}
+
 	return cats, nil
 }
 
@@ -76,13 +80,13 @@ func (repo *CatRepository) UpdateCat(cat *models.Cat) error {
 	return err
 }
 
-func (repo *CatRepository) DeleteCat(id uint) error {
+func (repo *CatRepository) DeleteCat(cat *models.Cat) error {
 	query := `	UPDATE 
 				    cats 
 				SET 
 				    deleted_at = $1 
 				WHERE 
 				    id = $2`
-	_, err := repo.DB.Exec(query, time.Now(), id)
+	_, err := repo.DB.Exec(query, time.Now(), cat.ID)
 	return err
 }

@@ -20,26 +20,26 @@ func SetupRoutes(r *gin.Engine, db *sql.DB) {
 	missionService := &services.MissionService{Repo: missionRepo}
 	missionHandler := &handlers.MissionHandler{Service: missionService}
 
-	r.GET("/swagger", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//
 	r.POST("/cats", catHandler.CreateCatHandler)
 	r.GET("/cats", catHandler.ListCatsHandler)
 	r.GET("/cats/:id", catHandler.CatByIDHandler)
 	r.PUT("/cats", catHandler.UpdateCatHandler)
-	r.DELETE("/cats/:id", catHandler.DeleteCatHandler)
+	r.DELETE("/cats", catHandler.DeleteCatHandler)
 
 	//
 	r.POST("/missions", missionHandler.CreateMissionHandler)
 	r.GET("/missions", missionHandler.ListMissionsHandler)
 	r.GET("/missions/:id", missionHandler.GetMissionByIDHandler)
-	r.PUT("/missions/:id", missionHandler.UpdateMissionStatusHandler)
+	r.PUT("/missions/", missionHandler.UpdateMissionStatusHandler)
 	r.DELETE("/missions/:id", missionHandler.DeleteMissionHandler)
 
 	//
 	r.POST("/missions/:mission_id/targets", missionHandler.AddTargetToMissionHandler)
-	r.PUT("/missions/assign/cat/:cat_id", missionHandler.AssignCatToMissionHandler)
-	r.PUT("/targets/:target_id/status", missionHandler.UpdateTargetStatusHandler)
-	r.PUT("/targets/:target_id/notes", missionHandler.UpdateTargetNotesHandler)
+	r.PUT("/missions/:mission_id/cats/:cat_id", missionHandler.AssignCatToMissionHandler)
+	r.PUT("/targets/status", missionHandler.UpdateTargetStatusHandler)
+	r.PUT("/targets/notes", missionHandler.UpdateTargetNotesHandler)
 	r.DELETE("/targets/:target_id", missionHandler.DeleteTargetHandler)
 }

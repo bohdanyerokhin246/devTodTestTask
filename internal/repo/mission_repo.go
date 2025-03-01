@@ -134,8 +134,7 @@ func (repo *MissionRepository) GetMissionByID(id uint) (*models.Mission, error) 
 }
 
 func (repo *MissionRepository) UpdateMissionStatus(mission *models.Mission) error {
-	// Update mission completion status
-	query := `UPDATE missions SET is_complete = $2, updated_at = $3 WHERE id = $4`
+	query := `UPDATE missions SET is_complete = $1, updated_at = $2 WHERE id = $3`
 	_, err := repo.DB.Exec(query, mission.IsComplete, time.Now(), mission.ID)
 	return err
 }
@@ -205,7 +204,7 @@ func (repo *MissionRepository) AddTargetToMission(missionID uint, target *models
 func (repo *MissionRepository) AssignCatToMission(missionID, catID uint) error {
 	// Check if the mission exists
 	var existingMissionID uint
-	err := repo.DB.QueryRow(`SELECT id FROM missions WHERE id = $1`, missionID).Scan(&existingMissionID)
+	err := repo.DB.QueryRow(`SELECT id FROM missions WHERE id = $1 AND is_complete = FALSE`, missionID).Scan(&existingMissionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return fmt.Errorf("mission not found")

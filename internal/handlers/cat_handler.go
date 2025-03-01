@@ -99,14 +99,19 @@ func (h *CatHandler) UpdateCatHandler(c *gin.Context) {
 // DeleteCatHandler godoc
 // @Summary Delete a cat
 // @Description Delete a cat from the database by its ID
-// @Param id path int true "Cat ID"
+// @Param cat body models.Cat true "Deleted cat data"
 // @Success 200 {object} ErrorResponse "Successfully deleted cat"
 // @Failure 400 {object} ErrorResponse "Invalid ID format"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /cats/{id} [delete]
+// @Router /cats [delete]
 func (h *CatHandler) DeleteCatHandler(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	err := h.Service.DeleteCat(uint(id))
+	var cat models.Cat
+	if err := c.ShouldBindJSON(&cat); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Invalid input"})
+		return
+	}
+
+	err := h.Service.DeleteCat(&cat)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 		return

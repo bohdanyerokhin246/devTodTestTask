@@ -106,6 +106,41 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Delete a cat from the database by its ID",
+                "summary": "Delete a cat",
+                "parameters": [
+                    {
+                        "description": "Deleted cat data",
+                        "name": "cat",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Cat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted cat",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID format",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/cats/{id}": {
@@ -126,39 +161,6 @@ const docTemplate = `{
                         "description": "Cat data",
                         "schema": {
                             "$ref": "#/definitions/models.Cat"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid ID format",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a cat from the database by its ID",
-                "summary": "Delete a cat",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Cat ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully deleted cat",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
                     "400": {
@@ -204,6 +206,41 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update the status of an existing mission.",
+                "summary": "Update mission status",
+                "parameters": [
+                    {
+                        "description": "Updated mission data",
+                        "name": "mission",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Mission"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated mission status",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new mission and store it in the database",
                 "summary": "Create a new mission",
@@ -223,43 +260,6 @@ const docTemplate = `{
                         "description": "Successfully created mission",
                         "schema": {
                             "$ref": "#/definitions/models.Mission"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/missions/status": {
-            "put": {
-                "description": "Update the status of an existing mission",
-                "summary": "Update mission status",
-                "parameters": [
-                    {
-                        "description": "Updated mission data",
-                        "name": "mission",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Mission"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully updated mission status",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
                     "400": {
@@ -352,7 +352,7 @@ const docTemplate = `{
             }
         },
         "/missions/{mission_id}/cats/{cat_id}": {
-            "post": {
+            "put": {
                 "description": "Assign a cat to a specific mission",
                 "summary": "Assign a cat to a mission",
                 "parameters": [
@@ -437,28 +437,30 @@ const docTemplate = `{
                 }
             }
         },
-        "/targets/{id}": {
-            "delete": {
-                "description": "Delete a target by its ID",
-                "summary": "Delete a target",
+        "/targets/notes": {
+            "put": {
+                "description": "Update notes for a specific target",
+                "summary": "Update target notes",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Target ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Target notes data",
+                        "name": "target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Target"
+                        }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Successfully deleted target",
+                    "200": {
+                        "description": "Target notes updated successfully",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
                     "400": {
-                        "description": "Invalid ID format",
+                        "description": "Invalid input",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
@@ -472,17 +474,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/targets/{id}/status": {
+        "/targets/status": {
             "put": {
                 "description": "Update the status of a specific target",
                 "summary": "Update target status",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Target ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Target status data",
+                        "name": "target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Target"
+                        }
                     }
                 ],
                 "responses": {
@@ -507,37 +511,28 @@ const docTemplate = `{
                 }
             }
         },
-        "/targets/{target_id}/notes": {
-            "put": {
-                "description": "Update notes for a specific target",
-                "summary": "Update target notes",
+        "/targets/{id}": {
+            "delete": {
+                "description": "Delete a target by its ID",
+                "summary": "Delete a target",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "Target ID",
-                        "name": "target_id",
+                        "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "description": "Target notes data",
-                        "name": "target",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Target"
-                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Target notes updated successfully",
+                    "204": {
+                        "description": "Successfully deleted target",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
                     "400": {
-                        "description": "Invalid input",
+                        "description": "Invalid ID format",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }

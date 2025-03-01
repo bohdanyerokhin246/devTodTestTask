@@ -27,9 +27,6 @@ func (s *MissionService) GetMissionByID(id uint) (*models.Mission, error) {
 }
 
 func (s *MissionService) UpdateMissionStatus(mission *models.Mission) error {
-	if mission.IsComplete {
-		return errors.New("cannot update mission after completion")
-	}
 	return s.Repo.UpdateMissionStatus(mission)
 }
 

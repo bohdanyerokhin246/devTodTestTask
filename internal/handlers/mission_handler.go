@@ -71,12 +71,12 @@ func (h *MissionHandler) GetMissionByIDHandler(c *gin.Context) {
 
 // UpdateMissionStatusHandler godoc
 // @Summary Update mission status
-// @Description Update the status of an existing mission
+// @Description Update the status of an existing mission.
 // @Param mission body models.Mission true "Updated mission data"
 // @Success 200 {object} ErrorResponse "Successfully updated mission status"
 // @Failure 400 {object} ErrorResponse "Invalid input"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /missions/status [put]
+// @Router /missions [put]
 func (h *MissionHandler) UpdateMissionStatusHandler(c *gin.Context) {
 	var mission models.Mission
 	if err := c.ShouldBindJSON(&mission); err != nil {
@@ -143,7 +143,7 @@ func (h *MissionHandler) AddTargetToMissionHandler(c *gin.Context) {
 // @Success 200 {object} ErrorResponse "Successfully assigned cat to mission"
 // @Failure 400 {object} ErrorResponse "Invalid input"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /missions/{mission_id}/cats/{cat_id} [post]
+// @Router /missions/{mission_id}/cats/{cat_id} [put]
 func (h *MissionHandler) AssignCatToMissionHandler(c *gin.Context) {
 	missionID, err := strconv.Atoi(c.Param("mission_id"))
 	if err != nil {
@@ -168,11 +168,11 @@ func (h *MissionHandler) AssignCatToMissionHandler(c *gin.Context) {
 // UpdateTargetStatusHandler godoc
 // @Summary Update target status
 // @Description Update the status of a specific target
-// @Param id path int true "Target ID"
+// @Param target body models.Target true "Target status data"
 // @Success 200 {object} ErrorResponse "Target status updated successfully"
 // @Failure 400 {object} ErrorResponse "Invalid ID format"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /targets/{id}/status [put]
+// @Router /targets/status [put]
 func (h *MissionHandler) UpdateTargetStatusHandler(c *gin.Context) {
 	var target models.Target
 	if err := c.ShouldBindJSON(&target); err != nil {
@@ -191,12 +191,11 @@ func (h *MissionHandler) UpdateTargetStatusHandler(c *gin.Context) {
 // UpdateTargetNotesHandler godoc
 // @Summary Update target notes
 // @Description Update notes for a specific target
-// @Param target_id path int true "Target ID"
 // @Param target body models.Target true "Target notes data"
 // @Success 200 {object} ErrorResponse "Target notes updated successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /targets/{target_id}/notes [put]
+// @Router /targets/notes [put]
 func (h *MissionHandler) UpdateTargetNotesHandler(c *gin.Context) {
 	var target models.Target
 
