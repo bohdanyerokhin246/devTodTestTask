@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS targets (
                                         country VARCHAR(100) NOT NULL,
                                         notes TEXT,
                                         is_complete BOOLEAN NOT NULL DEFAULT FALSE,
-                                        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                                        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                                        deleted_at TIMESTAMP NULL
+                                        created_at TIMESTAMP,
+                                        updated_at TIMESTAMP,
+                                        deleted_at TIMESTAMP
 );
